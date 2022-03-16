@@ -14,4 +14,4 @@ pluginManagement {
 rootProject.name = "SerialName"
 
 include(":workload")
-include(":test-processor")
+include(":processor")
