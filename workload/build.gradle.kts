@@ -3,7 +3,7 @@ plugins {
     id("com.google.devtools.ksp")
 }
 
-version = "1.0-SNAPSHOT"
+version = "0.1.0"
 
 kotlin {
     jvm {
@@ -22,6 +22,7 @@ kotlin {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
             }
+            kotlin.srcDir("build/generated/ksp")
         }
         val jvmTest by getting {
             dependencies {
@@ -29,19 +30,8 @@ kotlin {
             }
         }
     }
-
-    sourceSets.named("commonTest") {
-        kotlin.srcDir("build/generated/ksp")
-    }
 }
 
 dependencies {
     add("kspMetadata", project(":test-processor"))
-    /*add("kspJvm", project(":test-processor"))
-    add("kspJvmTest", project(":test-processor"))
-    add("kspIosX64", project(":test-processor"))
-    add("kspIosX64Test", project(":test-processor"))*/
-
-    // The universal "ksp" configuration has performance issue and is deprecated on multiplatform since 1.0.1
-    // ksp(project(":test-processor"))
 }
