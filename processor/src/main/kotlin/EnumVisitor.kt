@@ -37,17 +37,17 @@ class EnumVisitor(
 
     private fun classToValue(classDeclaration: KSClassDeclaration): Pair<KSClassDeclaration, String>? =
         if (classDeclaration.classKind == ClassKind.ENUM_ENTRY) {
-            val annotation: KSAnnotation = serialNameAnnotation(classDeclaration)
+            val annotation: KSAnnotation? = serialNameAnnotation(classDeclaration)
             val value: String? = annotationValue(annotation)
             if (value == null) null else Pair(classDeclaration, value)
         } else null
 
-    private fun serialNameAnnotation(classDeclaration: KSClassDeclaration) =
-        classDeclaration.annotations.first { it.shortName.asString() == "SerialName" }
+    private fun serialNameAnnotation(classDeclaration: KSClassDeclaration): KSAnnotation? =
+        classDeclaration.annotations.firstOrNull { it.shortName.asString() == "SerialName" }
 
-    private fun annotationValue(annotation: KSAnnotation): String? =
-        annotation.arguments
-            .firstOrNull { arg -> arg.name?.asString() == "value" }
+    private fun annotationValue(annotation: KSAnnotation?): String? =
+        annotation?.arguments
+            ?.firstOrNull { arg -> arg.name?.asString() == "value" }
             ?.value as String?
 
     private fun generateFromExtension(
@@ -55,7 +55,7 @@ class EnumVisitor(
         properties: Map<KSClassDeclaration, String>,
     ) {
         file += "\n"
-        file += "fun $className.Companion.fromSerialName(name: String): Directions = when (name) {\n"
+        file += "fun $className.Companion.fromSerialName(name: String): $className = when (name) {\n"
         properties.forEach { property ->
             file += "    \"${property.value}\" -> $className.${property.key.simpleName.getShortName()}\n"
         }
